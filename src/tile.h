@@ -2,43 +2,31 @@
 
 #include <array>
 #include <cstddef>
+#include <string>
+#include <vector>
 
 namespace BabaIsYou {
 
-constexpr size_t MAX_OBJECT_PER_TILE = 6;
+constexpr size_t MAX_OBJECT_PER_TILE = 5;
 
-enum class TileType { Empty, Wall, Player, Flag, Rock, Rule, NumTileType };
-
-enum class RuleType {
-    Baba,
-    Is,
-    You,
-    Wall,
-    Stop,
-    Rock,
-    Push,
-    Flag,
-    Win,
-};
+enum class ObjectType { Wall, Baba, Flag, Rock };
+enum class Property { You, Stop, Win, Push };
 
 class Tile {
   public:
-    void Push(TileType type);
-    TileType Pop();
-    bool Remove(TileType type);
+    void Push(ObjectType type);
+    ObjectType Pop();
+    bool Remove(ObjectType type);
+    void Clear();
     bool IsEmpty() const;
-    bool Contains(TileType type) const;
+    bool Contains(ObjectType type) const;
+    bool Contains(const std::vector<ObjectType>& types) const;
 
-    // iteration (non-const)
-    auto begin() { return m_objects.begin(); }
-    auto end() { return m_objects.begin() + m_numObjects; }
-
-    // iteration (const)
     auto begin() const { return m_objects.begin(); }
     auto end() const { return m_objects.begin() + m_numObjects; }
 
   private:
-    std::array<TileType, MAX_OBJECT_PER_TILE> m_objects;
+    std::array<ObjectType, MAX_OBJECT_PER_TILE> m_objects;
     int m_numObjects = 0;
 };
 

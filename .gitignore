@@ -1,5 +1,2 @@
 .vscode/
-bin/
-obj/
-Makefile
-*.make
+build/

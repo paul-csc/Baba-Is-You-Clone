@@ -236,3 +236,4 @@ TabWidth: 4
 #   - NS_SWIFT_NAME
 #   - PP_STRINGIZE
 #   - STRINGIZE
+WrapNamespaceBodyWithEmptyLines: Always
