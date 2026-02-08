@@ -49,6 +49,11 @@ class BiMap {
         return it != m_BToA.end() ? it->second : empty;
     }
 
+    void Clear() {
+        m_AToB.clear();
+        m_BToA.clear();
+    }
+
   private:
     std::unordered_map<A, std::vector<B>> m_AToB;
     std::unordered_map<B, std::vector<A>> m_BToA;

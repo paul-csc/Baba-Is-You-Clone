@@ -66,39 +66,12 @@ void Game::Draw() const {
 
     for (int y = 0; y < LEVEL_HEIGHT; ++y) {
         for (int x = 0; x < LEVEL_WIDTH; ++x) {
-            const Tile& tile = m_currentState.tiles[y][x];
             Rectangle r = { x * TILE_PIXEL_SIZE, y * TILE_PIXEL_SIZE, TILE_PIXEL_SIZE,
                 TILE_PIXEL_SIZE };
 
             DrawRectangleRec(r, { 50, 50, 50, 255 });
-            DrawRectangleLines(
-                (int)r.x, (int)r.y, (int)r.width, (int)r.height, { 30, 30, 30, 255 });
-
-            for (const auto object : tile) {
-                if (object == ObjectType::Wall) {
-                    DrawRectangleRec(r, DARKGRAY);
-                } else if (object == ObjectType::Rock) {
-                    DrawRectangleRounded(
-                        { r.x + 7.0f, r.y + 7.0f, TILE_PIXEL_SIZE - 14, TILE_PIXEL_SIZE - 14 },
-                        0.3f, 6, { 150, 100, 60, 255 });
-                } else if (object == ObjectType::Flag) {
-                    DrawRectangle(
-                        r.x + 15, r.y + 5, TILE_PIXEL_SIZE - 42, TILE_PIXEL_SIZE - 10, YELLOW);
-                    DrawRectangle(r.x + 21, r.y + 5, 17, 16, YELLOW);
-                } else if (object == ObjectType::Baba) {
-                    DrawRectangleRec(
-                        { r.x + 6, r.y + 6, TILE_PIXEL_SIZE - 12, TILE_PIXEL_SIZE - 12 }, BLUE);
-
-                    // eyes
-                    DrawRectangleRec({ r.x + 13, r.y + 15, 7, 7 }, BLACK);
-                    DrawRectangleRec({ r.x + TILE_PIXEL_SIZE - 20, r.y + 15, 7, 7 }, BLACK);
-                } else if (IsText(object)) {
-                    DrawRectangleRounded(
-                        { r.x + 6.0f, r.y + 6.0f, TILE_PIXEL_SIZE - 12, TILE_PIXEL_SIZE - 12 },
-                        0.3f, 6, WHITE);
-                    DrawText(TypeToStr(object).c_str(), r.x + 6.0f, r.y + TILE_PIXEL_SIZE / 2 - 9, 18, BLACK);
-                }
-            }
+            DrawRectangleLinesEx(r, 1.0f, { 30, 30, 30, 255 });
+            m_currentState.tiles[y][x].Draw(x, y);
         }
     }
 
@@ -201,11 +174,12 @@ void Game::TryMove(int dx, int dy) {
         }
 
         // move the You object
-        auto& source_you = m_currentState.tiles[pos.y][pos.x];
-        if (source_you.Remove(type)) {
+        if (m_currentState.tiles[pos.y][pos.x].Remove(type)) {
             m_currentState.tiles[ny][nx].Push(type);
         }
     }
+
+    //ParseRules();
 
     // check for win
     m_currentState.isWin = false;
@@ -215,6 +189,23 @@ void Game::TryMove(int dx, int dy) {
                 m_currentState.tiles[y][x].Contains(winObjects)) {
                 m_currentState.isWin = true;
                 return;
+            }
+        }
+    }
+}
+
+void Game::ParseRules() {
+    for (int y = 0; y < LEVEL_HEIGHT; ++y) {
+        for (int x = 0; x < LEVEL_WIDTH; ++x) {
+            for (const auto object : m_currentState.tiles[y][x]) {
+                if (IsText(object)) {
+                    if ((y + 2 < LEVEL_HEIGHT &&
+                            m_currentState.tiles[y + 1][x].Contains(ObjectType::TextIs) &&
+                            m_currentState.tiles[y + 2][x].Contains(ObjectType::TextIs)) ||
+                        (x + 2 < LEVEL_HEIGHT &&
+                            m_currentState.tiles[y][x + 1].Contains(ObjectType::TextIs))) {
+                    }
+                }
             }
         }
     }

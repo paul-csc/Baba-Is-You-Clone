@@ -29,6 +29,7 @@ class Game {
     static bool VecContains(const std::vector<ObjectType>& v, ObjectType type);
     bool AllPushable(const Tile& tile, const std::vector<ObjectType>& pushObjects) const;
     void TryMove(int dx, int dy);
+    void ParseRules();
 
     void SaveState();
     void LoadState(const GameState& gs);

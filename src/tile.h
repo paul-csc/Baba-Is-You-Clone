@@ -38,6 +38,15 @@ constexpr ObjectType& operator++(ObjectType& type) {
 constexpr bool IsText(ObjectType type) {
     return (type >= ObjectType::TextBaba && type < ObjectType::NumType);
 }
+constexpr bool IsVerb(ObjectType type) {
+    return (type == ObjectType::TextIs);
+}
+constexpr bool IsNoun(ObjectType type) {
+    return (type >= ObjectType::TextBaba && type < ObjectType::TextIs);
+}
+constexpr bool IsProperty(ObjectType type) {
+    return (type > ObjectType::TextIs && type < ObjectType::NumType);
+}
 
 inline std::string TypeToStr(ObjectType type) {
     std::string str;
@@ -72,6 +81,8 @@ class Tile {
     bool IsEmpty() const;
     bool Contains(ObjectType type) const;
     bool Contains(const std::vector<ObjectType>& types) const;
+
+    void Draw(int x, int y) const;
 
     auto begin() const { return m_objects.begin(); }
     auto end() const { return m_objects.begin() + m_numObjects; }
