@@ -1,2 +1,3 @@
-# Sokoban-Game
-A game inspired by Sokoban
+# Baba Is You Clone
+
+A clone of the official Baba Is You game
